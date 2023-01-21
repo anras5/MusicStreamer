@@ -433,16 +433,10 @@ bool event_on_client(int numberInClients, Server &server) {
         if(packet.type == P_SWAP) {
             std::cout << "Client wants to swap" << std::endl;
             swap_songs(server, packet);
-            return true;
-        }
-
-        // clients quits
-        if(packet.type == P_QUIT_SERVER) {
-            server.clients.erase(server.clients.begin() + numberInClients);
-            std::cout << "client deleted from clients" << std::endl;
             delete_packet(packet);
             return true;
         }
+
         std::cout << "Some other type of request, no. " << packet.type << std::endl;
     }
     return true;
