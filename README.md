@@ -40,6 +40,9 @@ make
 
 ![gui.png](gui.png)
 
+## Short video of how does the project work
+
+
 ## Built using
 - C/C++
 - Qt
