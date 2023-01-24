@@ -20,7 +20,6 @@ enum packetType {
     P_WANTS_TO_PAUSE,
     P_PAUSE,
     P_NEXT_SONG,
-    P_QUIT_SERVER,
     P_UNLOCK_SQ_BTN,
     P_CLIENT_MODE,
     P_EMPTY_QUEUE,

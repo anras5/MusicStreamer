@@ -33,7 +33,7 @@ bool send_packet_using_socket(int socket, Packet &packet) {
         memcpy(data + sizeof(packet.type), &packet.size, sizeof(packet.size));
         if(packet.size > 0)
         {
-            memcpy(data + sizeof(packet.type) + sizeof(packet.size), packet.data, DATA_SEND_SIZE);
+            memcpy(data + sizeof(packet.type) + sizeof(packet.size), packet.data, PACKET_DATA_MAX_SIZE);
         }
 
         // send it
@@ -75,7 +75,7 @@ bool receive_packet_using_socket(int socket, Packet &packet) {
                 memcpy(&packet.type, data, sizeof(packet.type));
                 memcpy(&packet.size, data + sizeof(packet.type), sizeof(packet.size));
                 if(packet.size > 0) {
-                    packet.data = new char[DATA_SEND_SIZE];
+                    packet.data = new char[PACKET_DATA_MAX_SIZE];
                     memcpy(packet.data, data + sizeof(packet.type) + sizeof(packet.size), packet.size);
                 }
                 return true;
