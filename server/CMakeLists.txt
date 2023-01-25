@@ -7,3 +7,5 @@ set(CMAKE_CXX_STANDARD 20)
 
 
 add_executable(server src/server.cpp src/helpers.cpp)
+
+execute_process(COMMAND mkdir -p ${CMAKE_BINARY_DIR}/musicServer)

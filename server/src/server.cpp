@@ -10,6 +10,7 @@
 #include <dirent.h>
 #include <poll.h>
 #include <thread>
+#include <regex>
 #include "structures.h"
 #include "helpers.h"
 
@@ -52,7 +53,7 @@ int create_socket(int argc, char* argv[]) {
 
 void send_available_songs(int socket) {
     // Open the directory
-    DIR* dir = opendir("../musicServer");
+    DIR* dir = opendir("musicServer/");
     dirent* entry;
 
     // Iterate over the entries in the directory
@@ -85,13 +86,19 @@ void send_available_songs(int socket) {
 void save_new_song(int socket, Packet &packetWithName) {
 
     std::string fileName = packetWithName.data;
+    std::string allowedDirectory = "musicServer/"; 
+    std::string filePath = allowedDirectory + fileName;
 
-    std::cout << fileName << std::endl;
+    // Check for invalid characters in fileName
+    if (!std::regex_match(fileName, std::regex("^[A-Za-z0-9_.]+$"))) {
+        std::cerr << "Error: Invalid characters in file name" << std::endl;
+        return;
+    }
 
     bool isFileOpen = true;
 
     // Open the .wav file
-    std::ofstream file("../musicServer/" + fileName, std::ios::binary);
+    std::ofstream file(filePath, std::ios::binary);
     if (!file.is_open()) {
         std::cerr << "Error opening file" << std::endl;
         isFileOpen = false;
@@ -183,7 +190,7 @@ void add_new_song_to_queue(Packet &packetWithName, Server &server) {
 } 
 
 void send_song_to_client(int socket, std::string fileName, int startTime) {
-    std::ifstream file("../musicServer/" + fileName, std::ios::binary);    
+    std::ifstream file("musicServer/" + fileName, std::ios::binary);    
     if(!file.is_open()) {
         std::cerr << "Error opening file" << std::endl;
         return;
@@ -440,7 +447,7 @@ bool event_on_client(int numberInClients, Server &server) {
             return true;
         }
 
-        std::cout << "Some other type of request, no. " << packet.type << std::endl;
+        // std::cout << "Some other type of request, no. " << packet.type << std::endl;
     }
     return true;
 }
