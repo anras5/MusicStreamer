@@ -101,8 +101,8 @@ void save_new_song(int socket, Packet &packetWithName) {
     Packet packet;
     while(receive_packet_using_socket(socket, packet)) {
         if(packet.type == P_UPLOAD_SONG_END){
+            std::cout << "ending saving new song" << std::endl;
             break;
-            std::cout << "break save new song" << std::endl;
         }
         if(isFileOpen)
             file.write(packet.data, packet.size);     
@@ -150,10 +150,11 @@ void send_mode_to_client(int socket, Server &server) {
     packet.type = P_CLIENT_MODE;
     if(server.hasQueueStarted) {
         packet.data = const_cast<char*>(w.c_str());
-    }  else {
-        packet.data = const_cast<char*>(a.c_str());;;
+        packet.size = sizeof(w.length());
+    } else {
+        packet.data = const_cast<char*>(a.c_str());
+        packet.size = sizeof(a.length());
     }
-    packet.size = sizeof(packet.data);
     send_packet_using_socket(socket, packet);
 }
 
@@ -174,8 +175,10 @@ void add_new_song_to_queue(Packet &packetWithName, Server &server) {
     
     std::string fileName = packetWithName.data;
     std::cout << "Adding " << fileName << " to the end of the queue" << std::endl;
-    server.playQueue.push_back(fileName);
-    send_queue_to_all_clients(server);
+    if(ends_with(fileName, ".wav")){
+        server.playQueue.push_back(fileName);
+        send_queue_to_all_clients(server);
+    }
 
 } 
 
@@ -476,6 +479,9 @@ int main(int argc, char* argv[]) {
     // Create the server structure
     Server server;
     server.sockfd = create_socket(argc, argv);
+    if(server.sockfd == -1) {
+        return 1;
+    }
     pollfd temp;
     temp.fd = server.sockfd;
     temp.events = POLLIN;

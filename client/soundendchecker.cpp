@@ -20,7 +20,7 @@ void SoundEndChecker::check() {
             break;
         }
         mutex->unlock();
-        QThread::sleep(0.3);
+        QThread::usleep(100);
     }
     if(*isPlaying){
        qDebug() << "end of song (thread)";

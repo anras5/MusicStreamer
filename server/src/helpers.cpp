@@ -6,6 +6,15 @@
 #include "structures.h"
 #include "constants.h"
 
+
+bool ends_with(std::string const &fullString, std::string const &ending) {
+    if (fullString.length() >= ending.length()) {
+        return (0 == fullString.compare (fullString.length() - ending.length(), ending.length(), ending));
+    } else {
+        return false;
+    }
+}
+
 void delete_packet(Packet &packet){
     if(packet.size > 0) {
         delete[] packet.data;
