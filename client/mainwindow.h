@@ -43,7 +43,7 @@ public:
     std::vector<QString> songsQueue;
 
     QMutex mutex;
-    std::atomic<bool> isPlaying;
+    std::atomic<bool> isPlaying{false};
     bool shouldPlay;
     int mode;
 

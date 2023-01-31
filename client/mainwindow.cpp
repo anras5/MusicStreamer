@@ -40,7 +40,6 @@ void MainWindow::receivePacket() {
         response.append(sock->readAll());
 
         while(read_byte_array(response, packet)) {
-            response.remove(0, 1024);
             if(packet.type == P_AVAILABLE_SONG) {
                 std::cout<< "P_AVAILABLE_SONG" << std::endl;
                 ui->listAvailSongs->clear();
@@ -179,6 +178,7 @@ void MainWindow::receivePacket() {
                     ui->labelMode->setVisible(false);
                 }
             }
+            response.remove(0, 1024);
         }
     }
 }
